@@ -8,12 +8,14 @@ class WishList {
   _getUid() {
     uid = GetUid().getId();
   }
-  Future<bool> addWishlistItem(String productId) async {
+  Future<bool> addWishlistItem(String productId, String url, String name, String price) async {
     _getUid();
     bool complete = false;
     print(productId);
     await _firestore.collection('users').doc('$uid').collection('wishlist').doc('$productId').set({
-      'name': 'product',
+      'name': name,
+      'url': url,
+      'price': price,
     }).whenComplete(() {
       complete = true;
     }).catchError((e) {

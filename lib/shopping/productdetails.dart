@@ -77,7 +77,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     await wishlist.deleteWishlistItem(widget.snap.id);
                                     tapped = false;
                                   } else {
-                                    await wishlist.addWishlistItem(widget.snap.id);
+                                    await wishlist.addWishlistItem(widget.snap.id, widget.snap.get('img'), widget.snap.get('name'), widget.snap.get('price'));
                                     tapped = true;
                                   }
                                   await wishlist.getWishlist();

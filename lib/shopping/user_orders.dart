@@ -86,7 +86,7 @@ class _UserOrdersState extends State<UserOrders> {
                               getProductdetails(snapshot.data.docs[index]['productID'], index);
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ViewOrder(url: url[index], orderId: snapshot.data.docs[index].id,)));
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => ViewOrder(url: url[index], orderId: snapshot.data.docs[index].id,)));
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(10.0),

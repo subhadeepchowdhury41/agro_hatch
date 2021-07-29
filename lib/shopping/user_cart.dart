@@ -10,11 +10,6 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  String img;
-  Future<DocumentSnapshot> getProduct(String productId) async {
-    final snap = await FirebaseFirestore.instance.collection('products').doc(productId).get();
-    return snap;
-  }
   getCart() async {
     final snap = await FirebaseFirestore.instance.collection('users').doc(GetUid().getId()).collection('cart').get();
     return snap.docs;
@@ -41,21 +36,70 @@ class _CartScreenState extends State<CartScreen> {
                       shrinkWrap: true,
                       itemCount: snapshot.data.length,
                       itemBuilder: (BuildContext context, int index) {
-                        String img;
-                        final snap = getProduct(snapshot.data[index].id);
-                        snap.then((value) {
-                          img = value.get('img');
-                        });
-                        print(img);
                         return Container(
-                          padding: EdgeInsets.all(10.0),
                           margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
                           decoration: BoxDecoration(
                             color: Colors.white38,
                             borderRadius: BorderRadius.circular(14.0),
                           ),
-                          child: ListTile(
-                            leading: img != null ? Image.network(img) : Text('null'),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: NetworkImage(snapshot.data[index]['url']),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius: BorderRadius.circular(14.0),
+                                        ),
+                                        margin: EdgeInsets.zero,
+                                        height: 110,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          Text(snapshot.data[index]['name']),
+                                          Text(snapshot.data[index]['price']),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        child: IconButton(icon: Icon(Icons.delete, color: Colors.red,), onPressed: () {}),
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      Container(
+                                          child: Column(
+                                            children: [
+                                              Text(snapshot.data[index]['number'].toString(), style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w300, color: Colors.black87),),
+                                              SizedBox(height: 10.0,),
+                                              Row(
+                                                children: [
+                                                  CircleAvatar(child: IconButton(icon: Icon(Icons.add), onPressed: null), backgroundColor: Colors.white,),
+                                                  SizedBox(width: 5.0,),
+                                                  CircleAvatar(child: IconButton(icon: Icon(Icons.horizontal_rule), onPressed: null), backgroundColor: Colors.white,),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        padding: EdgeInsets.all(15.0),
+                                      ),
+                                    ],
+                                  ),
+                              ),
+                            ],
                           ),
                         );
                       },
