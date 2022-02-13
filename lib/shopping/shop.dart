@@ -90,7 +90,7 @@ class _ShopState extends State<Shop> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Container(
-                      height: 200,
+                      height: 100,
                       child: Center(
                         child: Text(
                         'Loading...',
@@ -117,21 +117,21 @@ class _ShopState extends State<Shop> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7.0),
+                              borderRadius: BorderRadius.circular(17.0),
                               color: Colors.white38,
                             ),
                             margin: EdgeInsets.symmetric(
-                                vertical: 2.0, horizontal: 4.0),
-                            height: 150,
+                                vertical: 4.0, horizontal: 5.0),
+                            height: 130,
                             child: Row(
                               children: <Widget>[
                                 Expanded(
-                                  flex: 3,
+                                  flex: 2,
                                   child: Hero(
                                   tag: 'item$index',
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7.0),
+                                      borderRadius: BorderRadius.circular(17.0),
                                       image: DecorationImage(
                                         image: NetworkImage(
                                             snapshot.data[index]['img']),

@@ -60,7 +60,7 @@ class _AddState extends State<Add> {
 
 
 class AddOrder {
-  AddOrder({this.uid, this.price, this.item, this.paymentMethod, this.status, this.dateOrdered, this.productID, this.name});
+  AddOrder({this.uid, this.price, this.item, this.paymentMethod, this.status, this.dateOrdered, this.productID, this.name, this.url});
   final String uid;
   final String name;
   final String price;
@@ -69,12 +69,13 @@ class AddOrder {
   final String status;
   final String item;
   final String paymentMethod;
+  final String url;
   void getTag() {
     var date = DateTime.now();
     int r = Random().nextInt(9999);
-    pID =  '${date.second}$r';
+    orderID =  '${date.second}$r';
   }
-  String pID;
+  String orderID;
   FirebaseFirestore _instance = FirebaseFirestore.instance;
   uploadOrder() async {
     getTag();
@@ -82,10 +83,11 @@ class AddOrder {
     await saveUserOrder();
   }
   Future saveOrder() async {
-    return await _instance.collection('orders').doc(pID).set(
+    return await _instance.collection('orders').doc(orderID).set(
       {
         'name': name,
         'uid': uid,
+        'url': url,
         'price': price,
         'productID': productID,
         'dateOrdered': dateOrdered,
@@ -100,9 +102,11 @@ class AddOrder {
     );
   }
   Future saveUserOrder() async {
-    return await _instance.collection('users').doc('$uid').collection('orders').doc(pID).set({
+    return await _instance.collection('users').doc('$uid').collection('orders').doc(orderID).set({
       'no': '3',
       'productID': productID,
+      'url': url,
+      'status': status,
       'name': name,
     }).catchError(
             (error) {

@@ -1,13 +1,13 @@
 import 'package:agro_hatch/admin/add_product.dart';
+import 'package:agro_hatch/admin/all_orders.dart';
 import 'package:agro_hatch/authentication/login_page.dart';
 import 'package:agro_hatch/payment.dart';
 import 'package:agro_hatch/shopping/user_cart.dart';
 import 'package:agro_hatch/shopping/user_orders.dart';
 import 'package:agro_hatch/shopping/view_wishlist.dart';
-// import 'package:agro_hatch/search.dart';
+import 'package:agro_hatch/shopping/search.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:agro_hatch/shopping/shop.dart';
-import 'package:agro_hatch/shopping/add_order.dart';
 import 'package:agro_hatch/update_details.dart';
 import 'package:agro_hatch/utilities/settings.dart';
 import 'package:agro_hatch/weather/weather.dart';
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
             }),
           ],
           backgroundColor: kAppBarColor,
-          title: Text('AgroHatch'),
+          title: Text('AgroHatch', style: TextStyle(fontFamily: 'DMSerifDisplay', fontSize: 26.0),),
         ),
         drawer: Drawer(
           child: ListView(
@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.white,
                           fontSize: 50.0,
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'SignikaNegative'),
+                          fontFamily: 'DMSerifDisplay'),
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -294,44 +294,21 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     color: kAppBarColor,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          flex: 8,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => SearchPage(),),);
+                          },
                           child: Container(
+                            child: Text('Search Products', style: TextStyle(fontFamily: 'DMSerifDisplay', fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.3),
-                                  spreadRadius: 1,
-                                  blurRadius: 5,
-                                  offset: Offset(0, 0),
-                                ),
-                              ],
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.circular(30.0),
                             ),
-                            margin: EdgeInsets.all(12.0),
-                            child: TextField(
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                hintText: 'Search',
-                                contentPadding: EdgeInsets.all(10.0),
-                                fillColor: Colors.white,
-                                filled: true,
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: new BorderSide(color: Colors.green),
-                                  borderRadius: new BorderRadius.circular(25.0),
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: new BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                            ),
+                            padding: EdgeInsets.all(18.0),
+                            margin: EdgeInsets.all(30.0),
                           ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Icon(Icons.search),
                         ),
                       ],
                     ),
@@ -350,21 +327,21 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Column(
                         children: <Widget>[
-                          SizedBox(
-                            height: height * 0.07,
-                          ),
-                          GridItem(height: height, text1: 'Weather Information',onPress1: () {
+                          // SizedBox(
+                          //   height: height * 0.06,
+                          // ),
+                          GridItem(height: height, text1: 'Weather Information', icon1: Icon(Icons.cloud), icon2: Icon(Icons.store), onPress1: () {
                             Navigator.push(context, CupertinoPageRoute(builder: (context) => GetLocation(),),);
                           }, text2: 'Shop Now', onPress2: () {
                             Navigator.push(context, CupertinoPageRoute(builder: (context) => Shop(),),);
                           },),
-                          GridItem(height: height, text1: 'Agriculture Videos', onPress1: () {
+                          GridItem(height: height, icon1: Icon(Icons.video_collection), icon2: Icon(Icons.agriculture), text1: 'Agriculture Videos', onPress1: () {
                             launchYT();
                           }, text2: 'Agricultural News', onPress2: () {
                             Navigator.push(context, CupertinoPageRoute(builder: (context) => AddProduct(),),);
                           },),
-                          GridItem(height: height, text1: 'Agri-Market Information', onPress1: () {
-                            Navigator.push(context, CupertinoPageRoute(builder: (context) => Add(),),);
+                          GridItem(height: height, icon1: Icon(Icons.bar_chart), icon2: Icon(Icons.call), text1: 'Agri-Market Information', onPress1: () {
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => AllOrders(),),);
                           }, text2: 'Call Toll-free Kisaan Call Centre', onPress2: () {
                             callNumber();
                           },),
@@ -384,12 +361,16 @@ class _HomePageState extends State<HomePage> {
 
 class GridItem extends StatelessWidget {
   const GridItem({
+    this.icon1,
+    this.icon2,
     @required this.height,
     @required this.text1,
     @required this.onPress1,
     @required this.text2,
     @required this.onPress2,
   });
+  final Icon icon1;
+  final Icon icon2;
   final Function onPress1;
   final Function onPress2;
   final double height;
@@ -412,25 +393,29 @@ class GridItem extends StatelessWidget {
                       color: Colors.black.withOpacity(0.4),
                       spreadRadius: 1,
                       blurRadius: 10,
-                      offset: Offset(0, 0), // changes position of shadow
+                      offset: Offset(3, 4), // changes position of shadow
                     ),
                   ],
                   color: Colors.lightGreen[200],
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(17.0),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(text1, style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                      shadows: [
-                        BoxShadow(
-                          blurRadius: 1.0,
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                      ],
-                    ),),
+                    icon1,
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: Text(text1, style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        shadows: [
+                          BoxShadow(
+                            blurRadius: 1.0,
+                            color: Colors.black.withOpacity(0.1),
+                          ),
+                        ],
+                      ),),
+                    ),
                   ],
                 ),
               ),
@@ -447,17 +432,18 @@ class GridItem extends StatelessWidget {
                       color: Colors.black.withOpacity(0.4),
                       spreadRadius: 1,
                       blurRadius: 10,
-                      offset: Offset(0, 0), // changes position of shadow
+                      offset: Offset(3, 4), // changes position of shadow
                     ),
                   ],
                   color: Colors.lightGreen[200],
-                  borderRadius: BorderRadius.circular(10.0),
+                  borderRadius: BorderRadius.circular(17.0),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    icon2,
                     Container(
-                      padding: EdgeInsets.all(20.0),
+                      padding: EdgeInsets.all(10.0),
                       child: Text(text2, style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,

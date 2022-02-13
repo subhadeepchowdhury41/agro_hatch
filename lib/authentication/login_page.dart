@@ -12,6 +12,8 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
+  GlobalKey<ScaffoldState> key = new GlobalKey<ScaffoldState>();
+  bool isLoggedIn = false;
   bool spin = false;
   final _auth = FirebaseAuth.instance;
   String _email;
@@ -22,6 +24,7 @@ class _LogInState extends State<LogIn> {
       inAsyncCall: spin,
       child: SafeArea(
         child: Scaffold(
+          key: key,
           body: Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -54,7 +57,7 @@ class _LogInState extends State<LogIn> {
                           fillColor: Colors.white,
                           filled: true,
                           focusedBorder: UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.green),
+                            borderSide: new BorderSide(color: Colors.white),
                             borderRadius: new BorderRadius.circular(25.0),
                           ),
                           enabledBorder: UnderlineInputBorder(
@@ -109,7 +112,6 @@ class _LogInState extends State<LogIn> {
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.red)
                           ),
                         ),
                       ),
@@ -120,14 +122,26 @@ class _LogInState extends State<LogIn> {
                         try {
                           final newUser = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
                           if (newUser != null) {
+                            isLoggedIn = true;
                             setState(() {
                               spin = false;
                             });
-                            Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => HomePage(),),);
                           }
+                        } on FirebaseAuthException catch (e) {
+                          isLoggedIn = false;
+                          setState(() {
+                            spin = false;
+                          });
+                          SnackBar snackBar = SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text(e.code, style: TextStyle(color: Colors.white),),
+                          );
+                          key.currentState.showSnackBar(snackBar);
                         }
-                        catch (e) {
-                          print(e);
+                        if (isLoggedIn) {
+                          Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => HomePage(),),);
+                        } else {
+
                         }
                       },
                     ),
@@ -157,11 +171,9 @@ class _LogInState extends State<LogIn> {
                       child: Center(
                         child: Text('Sign Up', style: TextStyle(fontSize: 17.0),),
                       ),
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.red)
                           ),
                         ),
                       ),

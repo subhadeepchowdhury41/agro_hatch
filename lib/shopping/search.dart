@@ -15,8 +15,8 @@ class _SearchPageState extends State<SearchPage> {
   Future getAllProducts() async {
     QuerySnapshot snapshot = await _instance.collection("products").get();
     for (int i = 0; i < snapshot.docs.length; i++) {
-      products.add(snapshot.docs[i].data()['name']);
-      filteredProducts.add(snapshot.docs[i].data()['name']);
+      products.add(snapshot.docs[i].get('name'));
+      filteredProducts.add(snapshot.docs[i].get('name'));
     }
     print(products);
   }

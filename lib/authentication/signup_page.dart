@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:agro_hatch/authentication/login_page.dart';
 import 'package:agro_hatch/textinput.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +104,6 @@ class _SignUpState extends State<SignUp> {
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.red)
                           ),
                         ),
                       ),
@@ -133,6 +133,29 @@ class _SignUpState extends State<SignUp> {
                             );
                           });
                         }
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(20.0),
+                    height: 60.0,
+                    width: 120.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    padding: EdgeInsets.all(10.0),
+                    child: ElevatedButton(
+                      child: Center(
+                        child: Text('Log In', style: TextStyle(fontSize: 17.0),),
+                      ),
+                      style: ButtonStyle(shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                      ),
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LogIn(),),);
                       },
                     ),
                   ),

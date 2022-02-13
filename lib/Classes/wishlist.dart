@@ -39,13 +39,8 @@ class WishList {
     }
   }
   bool checkWishList(String givenId) {
-    print('called');
     bool found = false;
-    print('called 2');
-    print(wishList);
     for (int i = 0; i < wishList.length; i++) {
-      print('this is the id - ${wishList[i]}');
-      print('this is the passed id - $givenId');
       if (wishList[i] == givenId) {
         print('found');
         found = found || true;

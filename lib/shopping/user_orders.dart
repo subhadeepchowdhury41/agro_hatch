@@ -10,83 +10,43 @@ class UserOrders extends StatefulWidget {
 }
 
 class _UserOrdersState extends State<UserOrders> {
-  bool isKilled = false;
-  List<String> url = [];
-  List<String> status = [];
   Future<QuerySnapshot> getOrders() async {
     return FirebaseFirestore.instance.collection('users').doc(GetUid().getId()).collection('orders').get();
   }
-  getOrderDetails(String orderId, int index) async {
-    final snap = await FirebaseFirestore.instance.collection('orders').doc(orderId).get();
-    if (!isKilled) {
-      setState(() {
-        status[index] = snap.get('status');
-      });
-    }
-  }
-  getProductdetails(String pID, int index) async {
-    DocumentSnapshot snap = await FirebaseFirestore.instance.collection('products').doc(pID).get();
-    if (!isKilled) {
-      setState(() {
-        url[index] = snap.get('img');
-      });
-    }
-  }
-  @override
-  void dispose() {
-    isKilled = false;
-    super.dispose();
-  }
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      // ignore: missing_return
-      onWillPop: () {
-        setState(() {
-          isKilled = true;
-        });
-        Navigator.pop(context);
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {
-            isKilled = true;
-            Navigator.pop(context);
-          }),
-          backgroundColor: kAppBarColor,
-          title: Text('Your Orders'),
-        ),
-        body: SafeArea(
-          child: Container(
-            color: kBodyBackground,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Expanded(
-                  child: FutureBuilder(
-                    future: getOrders(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(child: Text('loading...'));
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kAppBarColor,
+        title: Text('Your Orders'),
+      ),
+      body: SafeArea(
+        child: Container(
+          color: kBodyBackground,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                child: FutureBuilder(
+                  future: getOrders(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Container(height: MediaQuery.of(context).size.height / 1.2, child: Center(child: Text('loading...',),),);
+                      } else {
+                        if (snapshot.data.docs.length == 0) {
+                          return Column(
+                            children: [
+                              SizedBox(height: MediaQuery.of(context).size.height / 2.5,),
+                              Text('No items here'),
+                            ],
+                          );
                         } else {
-                          if (url.length != snapshot.data.docs.length) {
-                            for (int i = 0; i < snapshot.data.docs.length; i++) {
-                              url.add('null');
-                            }
-                          }
-                          if (status.length != snapshot.data.docs.length) {
-                            for (int i = 0; i < snapshot.data.docs.length; i++) {
-                              status.add('null');
-                            }
-                          }
                           return ListView.builder(
                             itemCount: snapshot.data.docs.length,
                             itemBuilder: (BuildContext context, int index) {
-                              getOrderDetails(snapshot.data.docs[index].id, index);
-                              getProductdetails(snapshot.data.docs[index]['productID'], index);
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => ViewOrder(url: url[index], orderId: snapshot.data.docs[index].id,)));
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => ViewOrder(url: snapshot.data.docs[index]['url'], orderId: snapshot.data.docs[index].id,)));
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(10.0),
@@ -96,8 +56,8 @@ class _UserOrdersState extends State<UserOrders> {
                                     color: Colors.white38,
                                   ),
                                   child: ListTile(
-                                    trailing: status[index] != 'null' ? Text(status[index]) : Text('null'),
-                                    leading: url[index] != 'null' ? Image.network(url[index]) : Text('null'),
+                                    trailing: Text(snapshot.data.docs[index]['status']),
+                                    leading: Image.network(snapshot.data.docs[index]['url']),
                                     title: Text(snapshot.data.docs[index]['name'],),
                                     subtitle: Text(snapshot.data.docs[index].id),
                                   ),
@@ -106,11 +66,11 @@ class _UserOrdersState extends State<UserOrders> {
                             },
                           );
                         }
-                      },
-                  ),
-                )
-              ],
-            ),
+                      }
+                    },
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -146,6 +106,7 @@ class _ViewOrderState extends State<ViewOrder> {
       price = snap.get('price');
     });
   }
+  bool returnTapped = false;
   @override
   void initState() {
     getOrder();
@@ -191,8 +152,33 @@ class _ViewOrderState extends State<ViewOrder> {
                         dateOrdered != null ? DetailContainer(text1: 'Product Name', text2: name,) : Container(),
                         name != null ? DetailContainer(text1: 'DateOrdered', text2: dateOrdered,) : Container(),
                         status != null ? DetailContainer(text1: 'status', text2: status,) : Container(),
-                        item != null ? DetailContainer(text1: 'price', text2: price,) : Container(),
-                        paymentMethod != null ? DetailContainer(text1: 'Price', text2: paymentMethod,) : Container(),
+                        price != null ? DetailContainer(text1: 'price', text2: price,) : Container(),
+                        paymentMethod != null ? DetailContainer(text1: 'Payment Method', text2: paymentMethod,) : Container(),
+                        status != null ? ((status != 'delivered') && (status != 'rejected') ? GestureDetector(
+                          onTap: () {
+                            returnTapped = !returnTapped;
+                          },
+                          child: Container(
+                            height: 57,
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(14.0),
+                            ),
+                            padding: EdgeInsets.all(0.0),
+                            margin: EdgeInsets.all(4.0),
+                            child: Center(
+                              child: Text('Cancel Order'),
+                            ),
+                          ),
+                        ) : Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(14.0),
+                          ),
+                          padding: EdgeInsets.all(0.0),
+                          margin: EdgeInsets.all(4.0),
+                          height: 57,
+                          child: Center(child: Text('You cannot cancel order now')),)) : Container(),
                       ],
                     ),
                   ),

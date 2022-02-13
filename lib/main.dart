@@ -27,7 +27,7 @@ class AgroHatch extends StatelessWidget {
       },
       home: HomePage(),
       theme: ThemeData(
-        fontFamily: 'SignikaNegative',
+        fontFamily: 'Acme',
       ),
     );
   }
