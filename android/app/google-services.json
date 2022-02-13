@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "123507076580",
+    "firebase_url": "https://agro-hatch-a23d1-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "agro-hatch-a23d1",
+    "storage_bucket": "agro-hatch-a23d1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123507076580:android:84cea14d07539277d6abf1",
+        "android_client_info": {
+          "package_name": "com.agrohatch.agro_hatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123507076580-f31mb7o7uat2734rpk7b4nb2g4qqd1iu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2lyh0ZOU5tIFOhztrtGeE3Wwd7APRGxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123507076580-f31mb7o7uat2734rpk7b4nb2g4qqd1iu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
